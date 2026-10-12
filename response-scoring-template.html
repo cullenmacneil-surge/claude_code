@@ -1,0 +1,317 @@
+<style>
+  .rsp {
+    --ink: #1f2430;
+    --ink-soft: #545b6b;
+    --muted: #8a90a0;
+    --line: #e7e9ef;
+    --bg: #ffffff;
+    --panel: #f7f8fb;
+    --accent: #4f6bed;
+    --accent-soft: #eef1fd;
+    --good: #1f8a5b;
+    --good-soft: #e8f6ef;
+    --bad: #c2413b;
+    --bad-soft: #fcecea;
+    --warn: #a46a00;
+    --warn-soft: #fdf4e3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8px 16px 40px;
+  }
+  .rsp * { box-sizing: border-box; }
+  .rsp p { margin: 0 0 10px; }
+  .rsp p:last-child { margin-bottom: 0; }
+
+  /* Section headers */
+  .rsp .sec { margin-top: 36px; }
+  .rsp .sec-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 19px; font-weight: 650; letter-spacing: -0.01em;
+    margin: 0 0 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rsp .sec-title .ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 9px;
+    background: var(--accent-soft); font-size: 16px;
+  }
+
+  /* Overview */
+  .rsp .lead {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; color: var(--ink-soft);
+  }
+
+  /* Task flow */
+  .rsp .flow { list-style: none; margin: 0; padding: 0; counter-reset: flow; }
+  .rsp .flow li {
+    counter-increment: flow; position: relative;
+    padding: 0 0 18px 46px;
+  }
+  .rsp .flow li::before {
+    content: counter(flow);
+    position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-weight: 600; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rsp .flow li:not(:last-child)::after {
+    content: ""; position: absolute; left: 14px; top: 34px; bottom: 4px;
+    width: 2px; background: var(--line);
+  }
+  .rsp .flow .main { font-weight: 600; padding-top: 3px; display: block; }
+  .rsp .flow .sub { color: var(--ink-soft); font-size: 14px; display: block; margin-top: 2px; }
+
+  /* Reminders */
+  .rsp .reminders { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .rsp .reminders li {
+    background: var(--warn-soft); border-left: 3px solid #e3b350;
+    border-radius: 8px; padding: 10px 14px;
+  }
+
+  /* Step cards */
+  .rsp .step {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 14px; background: var(--bg);
+  }
+  .rsp .step h3 {
+    font-size: 16px; font-weight: 650; margin: 0 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rsp .step .tag {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .rsp .step .intro { color: var(--ink-soft); margin-bottom: 12px; }
+  .rsp .substeps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .rsp .substeps li { display: flex; gap: 10px; align-items: flex-start; }
+  .rsp .substeps .n {
+    flex: 0 0 auto; min-width: 34px; text-align: center;
+    font-size: 12px; font-weight: 600; color: var(--ink-soft);
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 6px; padding: 1px 6px; margin-top: 2px;
+  }
+  .rsp .examples { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 2px 44px; }
+  .rsp .ex { border-radius: 8px; padding: 9px 12px; font-size: 14px; }
+  .rsp .ex.yes { background: var(--good-soft); color: #145c3d; }
+  .rsp .ex.no { background: var(--bad-soft); color: #8a2a25; }
+
+  /* Tables */
+  .rsp .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .rsp table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .rsp th {
+    text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted); background: var(--panel);
+    padding: 10px 14px; border-bottom: 1px solid var(--line);
+  }
+  .rsp td { padding: 12px 14px; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .rsp tr:last-child td { border-bottom: none; }
+  .rsp td.factor { font-weight: 600; white-space: nowrap; }
+  .rsp .met { color: var(--good); }
+  .rsp .notmet { color: var(--bad); }
+  .rsp .met b, .rsp .notmet b { font-weight: 600; }
+
+  .rsp .score {
+    display: inline-block; min-width: 46px; text-align: center;
+    font-weight: 700; font-size: 14px; padding: 4px 8px; border-radius: 8px;
+  }
+  .rsp .s10 { background: #dcf2e6; color: #136b45; }
+  .rsp .s8  { background: #e8f4d9; color: #4b6b14; }
+  .rsp .s5  { background: #fdf0d5; color: #8a5a00; }
+  .rsp .s1  { background: #fde5d6; color: #9a4512; }
+  .rsp .s0  { background: #fadcda; color: #9a2a24; }
+  .rsp .band-title { font-weight: 600; }
+  .rsp .use { color: var(--ink-soft); }
+
+  @media (max-width: 600px) {
+    .rsp .examples { grid-template-columns: 1fr; margin-left: 0; }
+    .rsp td.factor { white-space: normal; }
+  }
+</style>
+
+<div class="rsp">
+
+  {{ macro | gh-morganite-greeting }}
+
+  <!-- Project Overview -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">✏️</span>Project Overview</h2>
+    <div class="lead">
+      In this project, you will first check if rendering repairs made to the task data is correct, check if the provided reference answer is correct, and then score two {{domain}} responses individually from 0 to 10 against the Reference Answer.
+    </div>
+  </section>
+
+  <!-- Task Flow -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">📎</span>Task Flow</h2>
+    <ol class="flow">
+      <li>
+        <span class="main">Validate that the rendering repair is correct.</span>
+        <span class="sub">Read the prompt, responses, and Reference Answer in the task data section. These will populate once you validate that the rendering repair is correct.</span>
+      </li>
+      <li>
+        <span class="main">Check the accuracy of the Reference Answer.</span>
+      </li>
+      <li>
+        <span class="main">For each response, score it from 0 to 10 against the Reference Answer using the score bands, and explain the score.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Reminders -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">❗️</span>Important Project Reminders</h2>
+    <ul class="reminders">
+      <li>Formatting differences are not errors unless the prompt requires a specific format.</li>
+      <li>Responses should not be penalized for including the prefix "Answer:".</li>
+      <li>LaTeX, plain text, and Markdown are all acceptable, "Answer: 10" and "10" are the same answer, and 1/2 and 0.5 are equivalent.</li>
+      <li>Judge content, not appearance. The exception is when the question explicitly asks for a particular format, units, or level of precision, in which case you must enforce exactly what was asked.</li>
+      <li>A response disagreeing with the Reference Answer is not evidence that the Reference Answer is wrong. The Reference Answer will almost always be correct, and the more likely explanation is that the response is incorrect. Mark the Reference Answer incorrect only when you have worked out the correct answer yourself and are confident it is incorrect.</li>
+      <li>Score the final answer. Do not lower the score for missing steps or reasoning unless the prompt asks for them.</li>
+    </ul>
+  </section>
+
+  <!-- Step by Step -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">📍</span>Step by Step Instructions</h2>
+
+    <div class="step">
+      <h3>⚙️ Step 0: Check the Rendering Repairs <span class="tag">do this first</span></h3>
+      <p class="intro">This is a sanity check for you to say whether automated formatting repairs changed the meaning of the responses or answer.</p>
+      <ul class="substeps">
+        <li><span class="n">0.1</span><span>On the right panel, locate the rendering checks for Response A, Response B, and the Reference Answer.</span></li>
+        <li><span class="n">0.2</span><span>Read the Repair Description. If it says "No repairs required", select "Yes" and move on.</span></li>
+        <li><span class="n">0.3</span><span>If a repair was made, compare the original and repaired text in the Repairs row. Select "Side by Side" to see them next to each other.</span></li>
+        <li><span class="n">0.4</span><span>If the repairs changed the meaning of the response in any way, select "No". Otherwise, select "Yes".</span></li>
+      </ul>
+      <div class="examples">
+        <div class="ex yes">Adding $...$ around maths or closing a missing bracket is fine (select "Yes")</div>
+        <div class="ex no">A changed number, sign, variable or final answer is not (select "No")</div>
+      </div>
+      <ul class="substeps" style="margin-top:10px">
+        <li><span class="n">0.5</span><span>If you select "No" for Response A, Response B, or the Reference Answer, you will be asked to provide a brief explanation of how the repair changed the meaning, and submit the task.</span></li>
+        <li><span class="n">0.6</span><span>If you selected "Yes" for all three, the Responses and Reference Answer will now appear in the Task Data section. Read the prompt, the Responses and the Reference Answer, then move on to Step 1.</span></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h3>🔧 Step 1: Reference Answer Check</h3>
+      <p class="intro">Before proceeding to grading the responses, confirm whether the Reference Answer is correct.</p>
+      <ul class="substeps">
+        <li><span class="n">1.1</span><span>Mark the Reference Answer Correct or Incorrect. Only mark it Incorrect if you worked out the correct answer yourself and are confident the reference answer does not match it.</span></li>
+        <li><span class="n">1.2</span><span>If you marked it Incorrect, explain in 3 to 5 sentences. Your explanation must state the correct answer and say why it is correct.</span></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h3>⚒️ Steps 2 &amp; 3: Grade Response A and Response B</h3>
+      <p class="intro">Score each response on its own; ties are allowed. Look only at Response A in this step.</p>
+      <ul class="substeps">
+        <li><span class="n">2.1</span><span>Compare the response with the Reference Answer, decide which score band it falls in, then choose the score within that band.</span></li>
+        <li><span class="n">2.2</span><span>Give a 1 to 3 sentence rationale for that score, saying whether the final answer matches and naming any issue that lowered it. Match the level of detail you include to the complexity of the task.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Grading Guidelines -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">📝</span>Grading Guidelines</h2>
+    <p class="lead">You will score each response from 0 to 10. A response earns a 10 only when it meets every full-credit rule; the score bands cover everything else. Please read the rules below to make sure you submit a quality task.</p>
+  </section>
+
+  <!-- Full-credit rules -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">📏</span>Full-credit rules</h2>
+    <p style="margin-bottom:14px">Compare each response with the provided reference answer to determine whether they represent the same answer while satisfying any explicit requirements in the prompt. Use the guidelines below to understand how "represent the same answer" is defined for this project:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>Met Conditions (All must be met for a score of 10)</th>
+            <th>Not Met Conditions (Any one of these lowers the score; see the score bands)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="factor">Answer content</td>
+            <td><span class="met"><b>Met:</b></span> The response gives the same answer as the reference and includes all required parts.</td>
+            <td><span class="notmet"><b>Not met:</b></span> The response gives a different value or object, or leaves out a required part.</td>
+          </tr>
+          <tr>
+            <td class="factor">Formatting</td>
+            <td><span class="met"><b>Met:</b></span> Any differences are harmless, such as “Answer: 10” vs. “10,” or “X = \frac{\pi^2}{3}” vs. “\frac{\pi^2}{3}”. LaTeX, plain text, and Markdown are all acceptable unless a specific format is required.</td>
+            <td><span class="notmet"><b>Not met:</b></span> The response does not follow a format explicitly required by the question.</td>
+          </tr>
+          <tr>
+            <td class="factor">Equivalence</td>
+            <td><span class="met"><b>Met:</b></span> The response is mathematically equivalent to the reference or can be simplified to it without adding assumptions, such as 1/2 vs. 0.5 or 2√2 vs. √8.</td>
+            <td><span class="notmet"><b>Not met:</b></span> The response is not equivalent, or making it equivalent requires new assumptions.</td>
+          </tr>
+          <tr>
+            <td class="factor">Units</td>
+            <td><span class="met"><b>Met:</b></span> The response includes the required units. If units are not required, answers with or without units are acceptable when the number matches.</td>
+            <td><span class="notmet"><b>Not met:</b></span> The question requires units, and the response omits them or uses incorrect units.</td>
+          </tr>
+          <tr>
+            <td class="factor">Rounding</td>
+            <td><span class="met"><b>Met:</b></span> The response meets any stated exactness or precision requirement. If neither is specified, a small rounding difference at the same intended precision is acceptable (e.g., 9.42 vs. 9.43).</td>
+            <td><span class="notmet"><b>Not met:</b></span> The response fails the stated exactness or precision requirement, including giving a decimal approximation when an exact value is required, or differs by more than acceptable rounding.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Score bands -->
+  <section class="sec">
+    <h2 class="sec-title"><span class="ico">📐</span>Score bands</h2>
+    <p style="margin-bottom:14px">First decide which band the response falls in, then choose the score within that band. Most responses here are bare final answers, so most scores will be 10 or 0. In-between scores mostly come from units, precision, exact form, and multi-part answers.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Rubric band</th>
+            <th>With bare final answers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="score s10">10</span></td>
+            <td><span class="band-title">Fully correct.</span> The final answer is equivalent to the Reference Answer, the reasoning is valid, and all requested parts are addressed.</td>
+            <td class="use">Use when: the response meets every full-credit rule. Missing steps or reasoning do not lower the score unless the prompt asks for them.</td>
+          </tr>
+          <tr>
+            <td><span class="score s8">8–9</span></td>
+            <td><span class="band-title">Minor issue.</span> Correct overall with only a minor omission, notation issue, or harmless imprecision.</td>
+            <td class="use">Use when: the answer is correct with one minor issue (9) or more than one (8).</td>
+          </tr>
+          <tr>
+            <td><span class="score s5">5–7</span></td>
+            <td><span class="band-title">Important issue.</span> Substantial correct progress, but an important step, part, precision requirement, or justification is missing or flawed.</td>
+            <td class="use">Use when: a requested unit, precision level, exact form, reasoning, or one required part is missing or wrong (7 for one issue, lower for more).</td>
+          </tr>
+          <tr>
+            <td><span class="score s1">1–4</span></td>
+            <td><span class="band-title">Limited progress.</span> Limited relevant progress, with a materially incorrect result or method.</td>
+            <td class="use">Use when: the final answer is wrong, but part of it is right, such as one part of a multi-part answer (more correct parts, higher score).</td>
+          </tr>
+          <tr>
+            <td><span class="score s0">0</span></td>
+            <td><span class="band-title">Incorrect.</span> Incorrect, irrelevant, or does not answer the question.</td>
+            <td class="use">Use when: the final answer is wrong, including numbers that are close but not equivalent.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
